@@ -188,21 +188,45 @@ lvim.builtin.treesitter.highlight.enable = true
 
 lvim.plugins = {
   {
-  "rmagatti/goto-preview",
-  config = function()
-  require('goto-preview').setup {
-        width = 120; -- Width of the floating window
-        height = 25; -- Height of the floating window
-        default_mappings = true; -- Bind default mappings
-        debug = false; -- Print debug information
-        opacity = nil; -- 0-100 opacity level of the floating window where 100 is fully transparent.
-        post_open_hook = nil -- A function taking two arguments, a buffer and a window to be ran as a hook.
+    "rmagatti/goto-preview",
+    config = function()
+      require('goto-preview').setup {
+        default_mappings = true, -- Bind default mappings
+        debug = false,           -- Print debug information
         -- You can use "default_mappings = true" setup option
         -- Or explicitly set keybindings
         -- vim.cmd("nnoremap gpd <cmd>lua require('goto-preview').goto_preview_definition()<CR>")
         -- vim.cmd("nnoremap gpi <cmd>lua require('goto-preview').goto_preview_implementation()<CR>")
         -- vim.cmd("nnoremap gP <cmd>lua require('goto-preview').close_all_win()<CR>")
-    }
-  end
+      }
+    end
+  },
+  {
+    "phaazon/hop.nvim",
+    event = "BufRead",
+    config = function()
+      require("hop").setup()
+      vim.api.nvim_set_keymap("n", "s", ":HopChar2<cr>", { silent = true })
+      vim.api.nvim_set_keymap("n", "S", ":HopWord<cr>", { silent = true })
+    end,
+  },
+  {
+    "windwp/nvim-spectre",
+    event = "BufRead",
+    config = function()
+      require("spectre").setup()
+      vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").open()<CR>', {
+        desc = "Open Spectre"
+      })
+      vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
+        desc = "Search current word"
+      })
+      vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
+        desc = "Search current word"
+      })
+      vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
+        desc = "Search on current file"
+      })
+    end,
   },
 }
